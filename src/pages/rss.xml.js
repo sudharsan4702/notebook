@@ -10,7 +10,7 @@ export async function GET(context) {
   return rss({
     title: 'Notebook',
     description: 'A small corner of the internet for things that enter the mind and things that come out of it.',
-    site: context.site,
+    site: context.site || 'https://sudharsanlog.netlify.app',
     items: sorted.map((entry) => ({
       title: entry.data.title,
       pubDate: entry.data.date,
