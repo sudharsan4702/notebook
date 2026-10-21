@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  isHome?: boolean;
+}
+
+const {
+  title = "Notebook",
+  description = "A small corner of the internet for things that enter the mind and things that come out of it.",
+  isHome = false,
+} = Astro.props;
+
+const pageTitle = isHome ? "notebook — my corner of the internet" : `${title} — notebook`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:ital,wght@0,400..700;1,400..700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="alternate" type="application/rss+xml" title="Notebook RSS Feed" href="/rss.xml" />
+    <script is:inline>
+      (function() {
+        const storedTheme = typeof localStorage !== 'undefined' && localStorage.getItem('theme');
+        const theme = storedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <header class="site-header">
+        <div class="brand-row">
+          <a href="/" class="site-title" id="site-logo">Notebook</a>
+          <nav class="site-nav" aria-label="Main navigation">
+            <a href="/" id="nav-stream">stream</a>
+            <a href="/about" id="nav-about">about</a>
+            <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme" title="Toggle theme">
+              <svg class="theme-icon light-icon" viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+              </svg>
+              <svg class="theme-icon dark-icon" viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </button>
+          </nav>
+        </div>
+        <p class="site-bio">
+          A small corner of the internet.
+        </p>
+      </header>
+
+      <main id="main-content">
+        <slot />
+      </main>
+
+      <footer class="site-footer">
+        <span>plain text & quiet thoughts</span>
+        <a href="/rss.xml" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">rss</a>
+      </footer>
+    </div>
+
+    <script is:inline>
+      (function() {
+        const toggleBtn = document.getElementById('theme-toggle');
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') ||
+              (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

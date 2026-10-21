@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const rawEntries = await getCollection('entries');
+
+// Sort newest first
+const entries = rawEntries.sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+// Collect all unique tags
+const allTags = Array.from(
+  new Set(entries.flatMap((e) => e.data.tags || []))
+).sort();
+
+function formatDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+---
+
+<BaseLayout isHome={true}>
+  <!-- Minimalist Filter Bar - Horizontal Single Row Scroll -->
+  <section class="filter-bar" aria-label="Filter entries by tag">
+    <span class="filter-label">topic:</span>
+    <div class="filter-scroll-container">
+      <div class="filter-track">
+        <button class="filter-btn active" data-filter="all" id="filter-all">all</button>
+        {allTags.map((tag) => (
+          <button class="filter-btn" data-filter={tag} id={`filter-${tag}`}>
+            #{tag}
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Chronological Stream (Hacker News inspired) -->
+  <ol class="stream-list" id="stream-container">
+    {entries.map((entry, index) => {
+      const entryTags = entry.data.tags || [];
+      const tagString = entryTags.join(' ');
+      const entryUrl = `/entries/${entry.slug}`;
+      return (
+        <li class="stream-item" data-tags={tagString} id={`entry-${entry.slug}`}>
+          <span class="stream-index">{index + 1}.</span>
+          <div class="stream-body">
+            <div class="stream-title-row">
+              <a href={entryUrl} class="stream-link" id={`link-${entry.slug}`}>
+                {entry.data.title}
+              </a>
+              {entry.data.link && (
+                <a
+                  href={entry.data.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="external-arrow"
+                  title="Direct external link"
+                  aria-label="Direct external link"
+                >
+                  ↗
+                </a>
+              )}
+            </div>
+
+            <div class="stream-meta">
+              <span class="meta-date">{formatDate(entry.data.date)}</span>
+              <span class="meta-sep">/</span>
+              {entryTags.map((tag: string) => (
+                <span class="tag-badge">#{tag}</span>
+              ))}
+            </div>
+
+            {entry.data.description && (
+              <p class="stream-description">{entry.data.description}</p>
+            )}
+          </div>
+        </li>
+      );
+    })}
+  </ol>
+
+  <!-- Client-side subtle filter logic (vanilla script, zero dependencies) -->
+  <script>
+    const filterButtons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+    const items = document.querySelectorAll<HTMLLIElement>('.stream-item');
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const selected = btn.dataset.filter || 'all';
+
+        // Update active button state
+        filterButtons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Filter stream list items
+        items.forEach((item) => {
+          const itemTags = (item.dataset.tags || '').split(' ');
+          if (selected === 'all' || itemTags.includes(selected)) {
+            item.style.display = 'flex';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Mouse wheel horizontal scroll support for desktop
+    const scrollContainer = document.querySelector<HTMLElement>('.filter-scroll-container');
+    if (scrollContainer) {
+      scrollContainer.addEventListener('wheel', (e) => {
+        if (e.deltaY !== 0 && scrollContainer.scrollWidth > scrollContainer.clientWidth) {
+          e.preventDefault();
+          scrollContainer.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+    }
+  </script>
+</BaseLayout>

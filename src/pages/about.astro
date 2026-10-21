@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About" description="About this quiet notebook and why it exists.">
+  <article class="reader-wrapper">
+    <nav class="back-nav">
+      <a href="/" class="back-link">← back to stream</a>
+    </nav>
+
+    <header class="reader-header">
+      <h1 class="reader-title">About this notebook</h1>
+      <div class="reader-meta">
+        <span>Colophon</span>
+        <span>/</span>
+        <span>Intent</span>
+      </div>
+    </header>
+
+    <div class="prose">
+      <p>
+        This website is my own small corner of the internet where I collect the things that enter my mind and the things that come out of it.
+      </p>
+
+      <p>
+        Here you will find an interesting idea stumbled upon online, an unhurried thought about philosophy, documentation of something learned about Java, an open question about life, a preserved link, or an unfinished idea shared with curious people.
+      </p>
+
+      <blockquote>
+        "It isn't strictly a blog, a portfolio, a note-taking app, or a knowledge-management system. It's a combination of these things, without the complexity of trying to become all of them."
+      </blockquote>
+
+      <p>
+        The central idea is simple: <strong>if something feels worth keeping, it belongs here.</strong>
+      </p>
+
+      <h2>Principles of this space</h2>
+      <ul>
+        <li><strong>No engagement counters:</strong> No likes, view counts, or tracking pixels.</li>
+        <li><strong>No social media anxiety:</strong> Writing doesn't need to perform or trend; it just needs to be honest.</li>
+        <li><strong>Plain text durability:</strong> Every entry is a human-readable Markdown file. Decades from now, when frameworks fade, the text remains.</li>
+        <li><strong>Warmth and silence:</strong> A quiet reading width, generous margins, and an off-white paper canvas.</li>
+      </ul>
+
+      <h2>How it's built</h2>
+      <p>
+        Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>, authored in Markdown, and styled with vanilla CSS.
+      </p>
+    </div>
+
+    <footer class="reader-footer">
+      <span>Notebook Colophon</span>
+      <button id="scroll-to-top" class="scroll-top-btn" type="button" aria-label="Scroll to top" title="Scroll to top">
+        <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+      </button>
+    </footer>
+  </article>
+
+  <script>
+    const scrollBtn = document.getElementById('scroll-to-top');
+    if (scrollBtn) {
+      scrollBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  </script>
+</BaseLayout>
