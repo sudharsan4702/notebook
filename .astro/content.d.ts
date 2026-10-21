@@ -144,9 +144,9 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"entries": {
-"2026-10-21-understanding-virtual-threads.md": {
-	id: "2026-10-21-understanding-virtual-threads.md";
-  slug: "2026-10-21-understanding-virtual-threads";
+"why-this-notebook.md": {
+	id: "why-this-notebook.md";
+  slug: "why-this-notebook";
   body: string;
   collection: "entries";
   data: InferEntrySchema<"entries">

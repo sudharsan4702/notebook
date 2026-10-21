@@ -1,4 +1,3 @@
-
 ---
 title: "Why this Notebook"
 date: 2026-10-21
